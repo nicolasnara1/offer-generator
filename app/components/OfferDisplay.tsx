@@ -61,11 +61,6 @@ type OfferDisplayProps = {
     startDate: string;
     customMessage: string;
     companyLogo?: string;
-    teamMessages?: {
-      name: string;
-      title: string;
-      message: string;
-    }[];
   };
   export default function OfferDisplay({
     candidateName,
@@ -79,6 +74,7 @@ type OfferDisplayProps = {
     teamMessages,
   }: OfferDisplayProps) {
     const searchParams = useSearchParams();
+    const [teamMessages, setTeamMessages] = useState<TeamMessage[]>([]);
 
   useEffect(() => {
     // Parse team messages from URL
