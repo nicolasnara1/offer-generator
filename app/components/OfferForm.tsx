@@ -35,14 +35,11 @@ export default function OfferForm() {
     companyLogo: '',
     teamMessages: [{ name: '', title: '', message: '' }]
   });
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>('');
-  const [isUploading, setIsUploading] = useState(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
-      setUploadedFile(file);
       const objectUrl = URL.createObjectURL(file);
       setPreviewUrl(objectUrl);
       setFormData(prev => ({ ...prev, companyLogo: objectUrl }));
@@ -63,7 +60,6 @@ export default function OfferForm() {
     setFormData(prev => ({ ...prev, [name]: value }));
 
     if (name === 'companyLogo') {
-      setUploadedFile(null);
       setPreviewUrl('');
     }
   };
@@ -336,7 +332,6 @@ export default function OfferForm() {
                             onClick={(e) => {
                               e.stopPropagation();
                               setPreviewUrl('');
-                              setUploadedFile(null);
                               setFormData(prev => ({ ...prev, companyLogo: '' }));
                             }}
                             className="text-red-600 hover:text-red-700"

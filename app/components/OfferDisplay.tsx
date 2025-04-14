@@ -53,26 +53,6 @@ interface TeamMessage {
   message: string;
 }
 
-interface OfferDisplayProps {
-  candidateName: string;
-  roleTitle: string;
-  baseSalary: string;
-  equityValue: string;
-  benefitsValue: string;
-  startDate: string;
-  customMessage: string;
-  companyLogo?: string;
-  teamMessages: string; // This will be a JSON string that we'll parse
-}
-
-interface AcceptanceFormData {
-  country: string;
-  address: string;
-  phone: string;
-  confirmedStartDate: string;
-  alternateStartDate?: string;
-}
-
 export default function OfferDisplay() {
   const searchParams = useSearchParams();
   const [isAccepted, setIsAccepted] = useState(false);
@@ -209,12 +189,12 @@ export default function OfferDisplay() {
             Welcome to the Team, {candidateName}! 🎉
           </h1>
           <p className="text-xl text-gray-700 mb-8">
-            We're thrilled to offer you the position of <span className="font-semibold text-blue-600">{roleTitle}</span>
+            We&apos;re thrilled to offer you the position of <span className="font-semibold text-blue-600">{roleTitle}</span>
           </p>
           {customMessage && (
             <div className="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-md">
               <p className="text-lg text-gray-800 whitespace-pre-line italic">
-                "{customMessage}"
+                &quot;{customMessage}&quot;
               </p>
             </div>
           )}
@@ -258,10 +238,12 @@ export default function OfferDisplay() {
               <div className="space-y-8">
                 {teamMessages.map((message, index) => (
                   <div key={index} className="flex items-start space-x-4 animate-fade-in-up" style={{ animationDelay: `${index * 200}ms` }}>
-                    <img
+                    <Image
                       src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(message.name)}`}
                       alt={message.name}
-                      className="w-12 h-12 rounded-full"
+                      width={48}
+                      height={48}
+                      className="rounded-full"
                     />
                     <div className="flex-grow">
                       <div className="bg-white p-6 rounded-2xl rounded-tl-none shadow-md relative border border-gray-100">
@@ -269,8 +251,10 @@ export default function OfferDisplay() {
                         <p className="text-gray-800 whitespace-pre-line mb-4 text-lg">
                           💬 {message.message}
                         </p>
-                        <p className="font-bold text-gray-900">💼 {message.name}</p>
-                        <p className="text-sm text-gray-600 italic">{message.title}</p>
+                        <div className="text-gray-700">
+                          <p className="font-semibold">{message.name}</p>
+                          <p className="text-sm">{message.title}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
