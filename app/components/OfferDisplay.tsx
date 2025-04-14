@@ -79,16 +79,6 @@ type OfferDisplayProps = {
     teamMessages,
   }: OfferDisplayProps) {
 
-  // Get params from URL
-  const candidateName = searchParams.get('candidateName') || '';
-  const roleTitle = searchParams.get('roleTitle') || '';
-  const baseSalary = searchParams.get('baseSalary') || '0';
-  const equityValue = searchParams.get('equityValue') || '0';
-  const benefitsValue = searchParams.get('benefitsValue') || '0';
-  const startDate = searchParams.get('startDate') || '';
-  const customMessage = searchParams.get('customMessage') || '';
-  const companyLogo = searchParams.get('companyLogo') || '';
-
   useEffect(() => {
     // Parse team messages from URL
     const teamMessagesParam = searchParams.get('teamMessages');
