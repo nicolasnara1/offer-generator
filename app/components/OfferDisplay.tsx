@@ -52,11 +52,32 @@ interface TeamMessage {
   title: string;
   message: string;
 }
-
-export default function OfferDisplay() {
-  const searchParams = useSearchParams();
-  const [isAccepted, setIsAccepted] = useState(false);
-  const [teamMessages, setTeamMessages] = useState<TeamMessage[]>([]);
+type OfferDisplayProps = {
+    candidateName: string;
+    roleTitle: string;
+    baseSalary: string;
+    equityValue: string;
+    benefitsValue: string;
+    startDate: string;
+    customMessage: string;
+    companyLogo?: string;
+    teamMessages?: {
+      name: string;
+      title: string;
+      message: string;
+    }[];
+  };
+  export default function OfferDisplay({
+    candidateName,
+    roleTitle,
+    baseSalary,
+    equityValue,
+    benefitsValue,
+    startDate,
+    customMessage,
+    companyLogo,
+    teamMessages,
+  }: OfferDisplayProps) {
 
   // Get params from URL
   const candidateName = searchParams.get('candidateName') || '';
