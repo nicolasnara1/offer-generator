@@ -78,6 +78,7 @@ type OfferDisplayProps = {
     companyLogo,
     teamMessages,
   }: OfferDisplayProps) {
+    const searchParams = useSearchParams();
 
   useEffect(() => {
     // Parse team messages from URL
