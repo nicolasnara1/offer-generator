@@ -1,8 +1,57 @@
 'use client';
 
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
+
+// Add animation keyframes to the top of the file
+const styles = `
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-scale-in {
+  opacity: 0;
+  animation: scaleIn 0.5s ease-out forwards;
+}
+
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.4s; }
+.delay-3 { animation-delay: 0.6s; }
+.delay-4 { animation-delay: 0.8s; }
+.delay-5 { animation-delay: 1s; }
+.delay-6 { animation-delay: 1.2s; }
+`;
+
+interface TeamMessage {
+  name: string;
+  title: string;
+  message: string;
+}
 
 interface OfferDisplayProps {
   candidateName: string;
@@ -13,6 +62,7 @@ interface OfferDisplayProps {
   startDate: string;
   customMessage: string;
   companyLogo?: string;
+  teamMessages: string; // This will be a JSON string that we'll parse
 }
 
 interface AcceptanceFormData {
@@ -23,60 +73,60 @@ interface AcceptanceFormData {
   alternateStartDate?: string;
 }
 
-export default function OfferDisplay({
-  candidateName,
-  roleTitle,
-  baseSalary,
-  equityValue,
-  benefitsValue,
-  startDate,
-  customMessage,
-  companyLogo,
-}: OfferDisplayProps) {
-  const [showCopied, setShowCopied] = useState(false);
-  const [showAcceptanceForm, setShowAcceptanceForm] = useState(false);
-  const [acceptanceData, setAcceptanceData] = useState<AcceptanceFormData>({
-    country: '',
-    address: '',
-    phone: '',
-    confirmedStartDate: startDate,
-    alternateStartDate: '',
-  });
+export default function OfferDisplay() {
+  const searchParams = useSearchParams();
   const [isAccepted, setIsAccepted] = useState(false);
+  const [teamMessages, setTeamMessages] = useState<TeamMessage[]>([]);
+
+  // Get params from URL
+  const candidateName = searchParams.get('candidateName') || '';
+  const roleTitle = searchParams.get('roleTitle') || '';
+  const baseSalary = searchParams.get('baseSalary') || '0';
+  const equityValue = searchParams.get('equityValue') || '0';
+  const benefitsValue = searchParams.get('benefitsValue') || '0';
+  const startDate = searchParams.get('startDate') || '';
+  const customMessage = searchParams.get('customMessage') || '';
+  const companyLogo = searchParams.get('companyLogo') || '';
 
   useEffect(() => {
-    // Initial confetti burst when the offer page loads
-    const duration = 3000;
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-    function randomInRange(min: number, max: number) {
-      return Math.random() * (max - min) + min;
+    // Parse team messages from URL
+    const teamMessagesParam = searchParams.get('teamMessages');
+    if (teamMessagesParam) {
+      try {
+        const parsedMessages = JSON.parse(teamMessagesParam);
+        setTeamMessages(parsedMessages);
+      } catch (error) {
+        console.error('Failed to parse team messages', error);
+        setTeamMessages([]);
+      }
     }
 
-    const interval: NodeJS.Timeout = setInterval(function() {
-      const timeLeft = duration - Date.now();
+    // Initial welcome confetti
+    const end = Date.now() + 2000;
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'];
 
-      if (timeLeft <= 0) {
-        return clearInterval(interval);
+    (function frame() {
+      confetti({
+        particleCount: 2,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: colors
+      });
+      
+      confetti({
+        particleCount: 2,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: colors
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
       }
-
-      const particleCount = 50 * (timeLeft / duration);
-
-      // since particles fall down, start a bit higher than random
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
-      });
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
-      });
-    }, 250);
-
-    return () => clearInterval(interval);
-  }, []);
+    }());
+  }, [searchParams]);
 
   const totalCompensation = 
     Number(baseSalary) + 
@@ -99,285 +149,245 @@ export default function OfferDisplay({
     });
   };
 
-  const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setShowCopied(true);
-      setTimeout(() => setShowCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy URL:', err);
-    }
-  };
-
-  const handleAcceptanceSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsAccepted(true);
-    
-    // Celebration confetti burst
-    const count = 200;
+  const celebrateAcceptance = () => {
     const defaults = {
-      origin: { y: 0.7 },
-      zIndex: 1000
+      spread: 360,
+      ticks: 100,
+      gravity: 0,
+      decay: 0.94,
+      startVelocity: 30,
+      colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
     };
 
-    function fire(particleRatio: number, opts: any) {
+    function shoot() {
       confetti({
         ...defaults,
-        ...opts,
-        particleCount: Math.floor(count * particleRatio),
+        particleCount: 50,
+        scalar: 1.2,
+        shapes: ['star']
+      });
+
+      confetti({
+        ...defaults,
+        particleCount: 20,
+        scalar: 2,
+        shapes: ['circle']
       });
     }
 
-    fire(0.25, {
-      spread: 26,
-      startVelocity: 55,
-    });
-    fire(0.2, {
-      spread: 60,
-    });
-    fire(0.35, {
-      spread: 100,
-      decay: 0.91,
-      scalar: 0.8
-    });
-    fire(0.1, {
-      spread: 120,
-      startVelocity: 25,
-      decay: 0.92,
-      scalar: 1.2
-    });
-    fire(0.1, {
-      spread: 120,
-      startVelocity: 45,
-    });
-
-    // In a real app, you would send this data to your backend
-    console.log('Offer accepted with data:', acceptanceData);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setAcceptanceData(prev => ({ ...prev, [name]: value }));
+    setTimeout(shoot, 0);
+    setTimeout(shoot, 100);
+    setTimeout(shoot, 200);
+    setTimeout(shoot, 300);
+    setTimeout(shoot, 400);
   };
 
   return (
-    <div className="relative max-w-4xl mx-auto">
-      {/* Share Button */}
-      <div className="absolute top-4 right-4 z-10">
-        <button
-          onClick={handleShare}
-          className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg hover:bg-white transition-all"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-          </svg>
-          <span className="text-gray-700 font-medium">
-            {showCopied ? 'Copied!' : 'Share Offer'}
-          </span>
-        </button>
-      </div>
-
-      <div className="animate-fade-in max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-xl">
-        {/* Hero Section */}
-        <div className="relative h-48 -mx-6 -mt-6 mb-8">
-          <Image
-            src="https://images.unsplash.com/photo-1492138786289-d35ea832da43?auto=format&fit=crop&w=2000"
-            alt="Celebration"
-            fill
-            className="object-cover rounded-t-lg"
-          />
+    <div className="min-h-screen bg-gray-50 text-gray-800">
+      <style jsx global>{styles}</style>
+      
+      {/* Header */}
+      <header className="bg-white py-6 shadow-md">
+        <div className="max-w-5xl mx-auto px-6 flex justify-between items-center">
           {companyLogo && (
-            <div className="absolute -bottom-8 left-6 w-24 h-24 bg-white rounded-lg shadow-lg p-2">
-              <Image
-                src={companyLogo}
-                alt="Company Logo"
-                fill
-                className="object-contain"
-              />
-            </div>
+            <Image
+              src={companyLogo}
+              alt="Company Logo"
+              width={160}
+              height={40}
+              className="object-contain"
+            />
           )}
         </div>
+      </header>
 
-        {/* Content */}
-        <div className="space-y-8 pt-8">
-          <div className="text-center animate-slide-up">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Welcome, {candidateName}!
-            </h1>
-            <p className="text-xl text-gray-800">
-              We're excited to offer you the position of
-            </p>
-            <p className="text-2xl font-semibold text-blue-600 mt-2">
-              {roleTitle}
-            </p>
-          </div>
-
-          {/* Compensation Details */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-slide-up" style={{ animationDelay: '200ms' }}>
-            <div className="bg-gray-50 p-6 rounded-lg text-center transform transition-all hover:scale-105">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Base Salary</h3>
-              <p className="text-2xl font-bold text-blue-600">{formatCurrency(Number(baseSalary))}</p>
-            </div>
-            <div className="bg-gray-50 p-6 rounded-lg text-center transform transition-all hover:scale-105">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Equity</h3>
-              <p className="text-2xl font-bold text-blue-600">{formatCurrency(Number(equityValue))}</p>
-              <p className="text-sm text-gray-700 mt-1">Valued at grant</p>
-            </div>
-            <div className="bg-gray-50 p-6 rounded-lg text-center transform transition-all hover:scale-105">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Benefits Value</h3>
-              <p className="text-2xl font-bold text-blue-600">{formatCurrency(Number(benefitsValue))}</p>
-            </div>
-          </div>
-
-          {/* Total Compensation */}
-          <div className="bg-blue-50 p-6 rounded-lg text-center animate-slide-up transform transition-all hover:scale-105" style={{ animationDelay: '400ms' }}>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">Total Compensation</h3>
-            <p className="text-3xl font-bold text-blue-600">{formatCurrency(totalCompensation)}</p>
-          </div>
-
-          {/* Start Date */}
-          <div className="text-center animate-slide-up" style={{ animationDelay: '600ms' }}>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Proposed Start Date</h3>
-            <p className="text-xl text-gray-800">{formatDate(startDate)}</p>
-          </div>
-
-          {/* Custom Message */}
-          <div className="bg-gray-50 p-6 rounded-lg animate-slide-up" style={{ animationDelay: '800ms' }}>
-            <h3 className="text-lg font-medium text-gray-900 mb-4">A Message from the Team</h3>
-            <p className="text-gray-800 whitespace-pre-line">{customMessage}</p>
-          </div>
-
-          {/* Accept Offer Button */}
-          {!showAcceptanceForm && !isAccepted && (
-            <div className="flex justify-center animate-slide-up" style={{ animationDelay: '1000ms' }}>
-              <button
-                onClick={() => setShowAcceptanceForm(true)}
-                className="px-8 py-4 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-200 transition-all"
-              >
-                Accept Offer
-              </button>
-            </div>
-          )}
-
-          {/* Acceptance Form */}
-          {showAcceptanceForm && !isAccepted && (
-            <form onSubmit={handleAcceptanceSubmit} className="space-y-6 animate-slide-up bg-gray-50 p-6 rounded-lg">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Complete Your Acceptance</h3>
-              
-              <div>
-                <label htmlFor="country" className="block text-sm font-medium text-gray-800 mb-2">
-                  Country of Residence
-                </label>
-                <input
-                  type="text"
-                  id="country"
-                  name="country"
-                  required
-                  value={acceptanceData.country}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="address" className="block text-sm font-medium text-gray-800 mb-2">
-                  Residential Address
-                </label>
-                <input
-                  type="text"
-                  id="address"
-                  name="address"
-                  required
-                  value={acceptanceData.address}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-800 mb-2">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  required
-                  value={acceptanceData.phone}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-800 mb-2">
-                  Start Date Confirmation
-                </label>
-                <div className="space-y-2">
-                  <div>
-                    <input
-                      type="radio"
-                      id="confirmDate"
-                      name="dateConfirmation"
-                      className="mr-2"
-                      checked={!acceptanceData.alternateStartDate}
-                      onChange={() => setAcceptanceData(prev => ({ ...prev, alternateStartDate: '' }))}
-                    />
-                    <label htmlFor="confirmDate" className="text-gray-800">
-                      I confirm the proposed start date of {formatDate(startDate)}
-                    </label>
-                  </div>
-                  <div>
-                    <input
-                      type="radio"
-                      id="alternateDate"
-                      name="dateConfirmation"
-                      className="mr-2"
-                      checked={!!acceptanceData.alternateStartDate}
-                      onChange={() => setAcceptanceData(prev => ({ ...prev, alternateStartDate: prev.confirmedStartDate }))}
-                    />
-                    <label htmlFor="alternateDate" className="text-gray-800">
-                      I would like to propose an alternate start date
-                    </label>
-                  </div>
-                  {acceptanceData.alternateStartDate && (
-                    <input
-                      type="date"
-                      name="alternateStartDate"
-                      value={acceptanceData.alternateStartDate}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 mt-2"
-                    />
-                  )}
-                </div>
-              </div>
-
-              <div className="flex justify-center pt-4">
-                <button
-                  type="submit"
-                  className="px-8 py-4 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-200 transition-all"
-                >
-                  Confirm Acceptance
-                </button>
-              </div>
-            </form>
-          )}
-
-          {/* Acceptance Confirmation */}
-          {isAccepted && (
-            <div className="text-center bg-green-50 p-6 rounded-lg animate-slide-up">
-              <h3 className="text-xl font-semibold text-green-800 mb-2">Offer Accepted!</h3>
-              <p className="text-green-700">
-                Congratulations! We're excited to have you join the team.
-                {acceptanceData.alternateStartDate 
-                  ? ` We'll be in touch regarding your proposed start date of ${formatDate(acceptanceData.alternateStartDate)}.`
-                  : ` We'll see you on ${formatDate(startDate)}!`
-                }
+      {/* Main Content */}
+      <main className="max-w-5xl mx-auto px-6 py-12">
+        {/* Hero Section */}
+        <section className="text-center mb-16 animate-fade-in-up">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Welcome to the Team, {candidateName}! 🎉
+          </h1>
+          <p className="text-xl text-gray-700 mb-8">
+            We're thrilled to offer you the position of <span className="font-semibold text-blue-600">{roleTitle}</span>
+          </p>
+          {customMessage && (
+            <div className="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-md">
+              <p className="text-lg text-gray-800 whitespace-pre-line italic">
+                "{customMessage}"
               </p>
             </div>
           )}
+        </section>
+
+        {/* Compensation Section */}
+        <section className="mb-16 animate-fade-in-up delay-1">
+          <div className="bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl shadow-xl">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+              💰 Your Compensation Package
+            </h2>
+            <div className="text-4xl font-bold text-blue-600 text-center mb-6">
+              {formatCurrency(totalCompensation)}
+              <div className="text-base font-normal text-gray-600 mt-2">Annual Total Compensation</div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="bg-white p-6 rounded-xl shadow-md">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Base Salary</h3>
+                <p className="text-2xl font-bold text-gray-900">{formatCurrency(Number(baseSalary))}</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-md">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Equity</h3>
+                <p className="text-2xl font-bold text-gray-900">{formatCurrency(Number(equityValue))}</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-md">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Benefits</h3>
+                <p className="text-2xl font-bold text-gray-900">{formatCurrency(Number(benefitsValue))}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Team Messages Section */}
+        {teamMessages.length > 0 && (
+          <section className="mb-16 animate-fade-in-up delay-2">
+            <div className="bg-gradient-to-br from-purple-50 to-white p-8 rounded-2xl shadow-xl">
+              <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+                👋 Meet Your Future Team
+              </h2>
+              <div className="space-y-8">
+                {teamMessages.map((message, index) => (
+                  <div key={index} className="flex items-start space-x-4 animate-fade-in-up" style={{ animationDelay: `${index * 200}ms` }}>
+                    <img
+                      src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(message.name)}`}
+                      alt={message.name}
+                      className="w-12 h-12 rounded-full"
+                    />
+                    <div className="flex-grow">
+                      <div className="bg-white p-6 rounded-2xl rounded-tl-none shadow-md relative border border-gray-100">
+                        <div className="absolute left-[-8px] top-4 w-4 h-4 bg-white transform rotate-45 border-l border-t border-gray-100"></div>
+                        <p className="text-gray-800 whitespace-pre-line mb-4 text-lg">
+                          💬 {message.message}
+                        </p>
+                        <p className="font-bold text-gray-900">💼 {message.name}</p>
+                        <p className="text-sm text-gray-600 italic">{message.title}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Onboarding Timeline */}
+        <section className="mb-16 animate-fade-in-up delay-3">
+          <div className="bg-gradient-to-br from-green-50 to-white p-8 rounded-2xl shadow-xl">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+              🚀 Your First 30 Days
+            </h2>
+            <div className="max-w-2xl mx-auto">
+              <ol className="space-y-6">
+                <li className="flex items-center space-x-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">1</div>
+                  <div>
+                    <h3 className="font-semibold text-lg">Week 1: Welcome & Setup</h3>
+                    <p className="text-gray-600">Meet your team, set up your workstation, and get familiar with our tools</p>
+                  </div>
+                </li>
+                <li className="flex items-center space-x-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">2</div>
+                  <div>
+                    <h3 className="font-semibold text-lg">Week 2: Deep Dive</h3>
+                    <p className="text-gray-600">1:1s with key team members and introduction to our systems</p>
+                  </div>
+                </li>
+                <li className="flex items-center space-x-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">3</div>
+                  <div>
+                    <h3 className="font-semibold text-lg">Week 3-4: First Project</h3>
+                    <p className="text-gray-600">Get started on your first project with full team support</p>
+                  </div>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="mb-16 animate-fade-in-up delay-4">
+          <div className="bg-gradient-to-br from-yellow-50 to-white p-8 rounded-2xl shadow-xl">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+              ❓ Frequently Asked Questions
+            </h2>
+            <div className="max-w-2xl mx-auto space-y-6">
+              <div>
+                <h3 className="font-semibold text-lg mb-2">💻 What equipment will I receive?</h3>
+                <p className="text-gray-600">You'll get a MacBook Pro and any peripherals you need to work effectively.</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg mb-2">🏥 When do my benefits start?</h3>
+                <p className="text-gray-600">Your health insurance and other benefits begin on your first day.</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg mb-2">📅 What's my start date?</h3>
+                <p className="text-gray-600">Your proposed start date is {formatDate(startDate)}. We can discuss adjustments if needed.</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg mb-2">📞 Who can I contact with questions?</h3>
+                <p className="text-gray-600">Your HR contact will reach out shortly with next steps and contact information.</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg mb-2">📝 When will I receive my official offer letter?</h3>
+                <p className="text-gray-600">You'll receive your offer letter right after accepting this offer.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        {!isAccepted && (
+          <section className="text-center animate-fade-in-up delay-5">
+            <button
+              onClick={() => {
+                setIsAccepted(true);
+                celebrateAcceptance();
+              }}
+              className="px-8 py-4 bg-green-600 text-white text-lg rounded-xl font-semibold hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-200 transition-all transform hover:scale-105"
+            >
+              Accept Offer & Join the Team 🎉
+            </button>
+            <p className="mt-4 text-gray-600">
+              Questions? Schedule a call with our HR team
+            </p>
+          </section>
+        )}
+
+        {/* Acceptance Message */}
+        {isAccepted && (
+          <section className="text-center bg-green-50 p-8 rounded-2xl animate-scale-in">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">🎉 Welcome to the Team!</h3>
+            <p className="text-lg text-gray-800 mb-4">
+              We're thrilled to have you join us. You'll receive an email shortly with next steps.
+            </p>
+            <p className="text-gray-600">
+              Your journey begins on {formatDate(startDate)}
+            </p>
+          </section>
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-gray-200 mt-12">
+        <div className="max-w-5xl mx-auto px-6 py-8">
+          <div className="text-center text-gray-500 text-sm">
+            &copy; {new Date().getFullYear()} Your Company. All rights reserved.
+            <div className="mt-2">
+              This offer is confidential and subject to the terms outlined in your offer letter.
+            </div>
+          </div>
         </div>
-      </div>
+      </footer>
     </div>
   );
 } 
