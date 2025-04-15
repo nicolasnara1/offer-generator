@@ -3,20 +3,21 @@ import OfferDisplay from '@/app/components/OfferDisplay';
 
 type Props = {
   params: Promise<any>;
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default function Page({ searchParams }: Props) {
+export default async function Page({ searchParams }: Props) {
+  const resolvedParams = await searchParams;
   const offerData = {
-    candidateName: searchParams.candidateName?.toString() || '',
-    roleTitle: searchParams.roleTitle?.toString() || '',
-    baseSalary: searchParams.baseSalary?.toString() || '',
-    equityValue: searchParams.equityValue?.toString() || '',
-    benefitsValue: searchParams.benefitsValue?.toString() || '',
-    startDate: searchParams.startDate?.toString() || '',
-    customMessage: searchParams.customMessage?.toString() || '',
-    companyLogo: searchParams.companyLogo?.toString() || '',
-    teamMessages: searchParams.teamMessages?.toString() || '[]',
+    candidateName: resolvedParams.candidateName?.toString() || '',
+    roleTitle: resolvedParams.roleTitle?.toString() || '',
+    baseSalary: resolvedParams.baseSalary?.toString() || '',
+    equityValue: resolvedParams.equityValue?.toString() || '',
+    benefitsValue: resolvedParams.benefitsValue?.toString() || '',
+    startDate: resolvedParams.startDate?.toString() || '',
+    customMessage: resolvedParams.customMessage?.toString() || '',
+    companyLogo: resolvedParams.companyLogo?.toString() || '',
+    teamMessages: resolvedParams.teamMessages?.toString() || '[]',
   };
 
   return (
