@@ -247,14 +247,6 @@ export default function OfferDisplay({
 
       <main className="max-w-5xl mx-auto px-6 py-12">
         <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
-          {/* Header Gradient Square */}
-          <div className="animate-fade-in-up delay-1 mb-12">
-            <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-2xl p-8 shadow-lg">
-              <h1 className="text-3xl font-bold text-white text-center mb-4">Create Job Offer</h1>
-              <p className="text-lg text-white/90 text-center">Fill in the details below to generate a beautiful offer letter</p>
-            </div>
-          </div>
-
           {/* Welcome Message - Updated to be more appropriate for an offer letter */}
           <div className="animate-fade-in-up delay-1 text-center bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-2xl p-8 shadow-lg mb-8">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">Congratulations, {candidateName}! 🎉</h1>

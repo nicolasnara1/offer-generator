@@ -109,13 +109,11 @@ export default function OfferForm() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <div className="bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl p-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Create Job Offer
-            </h1>
-            <p className="text-xl text-gray-700">
-              Fill in the details below to generate a beautiful offer letter
-            </p>
+          <div className="animate-fade-in-up delay-1 mb-12">
+            <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-2xl p-8 shadow-lg">
+              <h1 className="text-3xl font-bold text-white text-center mb-4">Create Job Offer</h1>
+              <p className="text-lg text-white/90 text-center">Fill in the details below to generate a beautiful offer letter</p>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8">
