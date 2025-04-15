@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import confetti from 'canvas-confetti';
 
 // Add animation keyframes to the top of the file
@@ -64,19 +64,9 @@ type OfferDisplayProps = {
   companyLogo?: string;
 };
 
-export default function OfferDisplay({
-  candidateName,
-  roleTitle,
-  baseSalary,
-  equityValue,
-  benefitsValue,
-  startDate,
-  customMessage,
-  companyLogo,
-}: OfferDisplayProps) {
+function TeamMessages() {
   const searchParams = useSearchParams();
   const [resolvedTeamMessages, setResolvedTeamMessages] = useState<TeamMessage[]>([]);
-  const [isAccepted, setIsAccepted] = useState(false);
 
   useEffect(() => {
     const teamMessagesParam = searchParams.get('teamMessages');
@@ -89,7 +79,43 @@ export default function OfferDisplay({
         setResolvedTeamMessages([]);
       }
     }
+  }, [searchParams]);
 
+  if (resolvedTeamMessages.length === 0) return null;
+
+  return (
+    <div className="animate-fade-in-up delay-6">
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">Messages from the Team</h3>
+      <div className="space-y-6">
+        {resolvedTeamMessages.map((message, index) => (
+          <div key={index} className="bg-gray-50 rounded-xl p-6">
+            <p className="text-gray-600 italic mb-4">"{message.message}"</p>
+            <div className="flex items-center">
+              <div>
+                <p className="font-semibold text-gray-900">{message.name}</p>
+                <p className="text-gray-600">{message.title}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function OfferDisplay({
+  candidateName,
+  roleTitle,
+  baseSalary,
+  equityValue,
+  benefitsValue,
+  startDate,
+  customMessage,
+  companyLogo,
+}: OfferDisplayProps) {
+  const [isAccepted, setIsAccepted] = useState(false);
+
+  useEffect(() => {
     const end = Date.now() + 2000;
     const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'];
 
@@ -98,7 +124,7 @@ export default function OfferDisplay({
       confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors });
       if (Date.now() < end) requestAnimationFrame(frame);
     })();
-  }, [searchParams]);
+  }, []);
 
   const totalCompensation = Number(baseSalary) + Number(equityValue) + Number(benefitsValue);
 
@@ -181,24 +207,9 @@ export default function OfferDisplay({
             <p className="text-lg text-gray-700 mb-8">{formatDate(startDate)}</p>
           </div>
 
-          {resolvedTeamMessages.length > 0 && (
-            <div className="animate-fade-in-up delay-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">Messages from the Team</h3>
-              <div className="space-y-6">
-                {resolvedTeamMessages.map((message, index) => (
-                  <div key={index} className="bg-gray-50 rounded-xl p-6">
-                    <p className="text-gray-600 italic mb-4">"{message.message}"</p>
-                    <div className="flex items-center">
-                      <div>
-                        <p className="font-semibold text-gray-900">{message.name}</p>
-                        <p className="text-gray-600">{message.title}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          <Suspense fallback={<div>Loading team messages...</div>}>
+            <TeamMessages />
+          </Suspense>
 
           {!isAccepted && (
             <div className="mt-12 text-center animate-fade-in-up delay-6">
