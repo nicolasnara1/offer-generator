@@ -1,11 +1,14 @@
 import { Suspense } from 'react';
 import OfferDisplay from '@/app/components/OfferDisplay';
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+type Props = {
+  params: {};
+  searchParams: Record<string, string | string[] | undefined>;
+}
+
+export default function Page(props: Props) {
+  const { searchParams } = props;
+  
   const offerData = {
     candidateName: searchParams.candidateName?.toString() || '',
     roleTitle: searchParams.roleTitle?.toString() || '',
