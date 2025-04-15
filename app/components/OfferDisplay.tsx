@@ -248,14 +248,15 @@ export default function OfferDisplay({
       <main className="max-w-5xl mx-auto px-6 py-12">
         <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
           {/* Welcome Message - Updated to be more appropriate for an offer letter */}
-          <div className="animate-fade-in-up delay-1 text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Congratulations, {candidateName}! 🎉</h1>
-            <h2 className="text-2xl text-gray-700 mb-8">Your offer for <span className="font-bold">{roleTitle}</span> 💼</h2>
+          <div className="animate-fade-in-up delay-1 text-center bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-2xl p-8 shadow-lg mb-8">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">Congratulations, {candidateName}! 🎉</h1>
+            <h2 className="text-2xl text-gray-700 mb-4">Your offer for <span className="font-bold text-purple-600">{roleTitle}</span> 💼</h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
           </div>
 
           {/* Custom Message */}
-          <div className="animate-fade-in-up delay-2 text-center">
-            <p className="text-lg text-gray-600 mb-8">{customMessage}</p>
+          <div className="animate-fade-in-up delay-2 text-center bg-gradient-to-r from-indigo-50 via-blue-50 to-cyan-50 rounded-xl p-8 shadow-md mb-12">
+            <p className="text-lg text-gray-700 italic">{customMessage}</p>
           </div>
 
           {/* Total Compensation - Moved above the breakdown */}
