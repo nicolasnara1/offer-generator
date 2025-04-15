@@ -219,6 +219,12 @@ export default function OfferDisplay({
     [0, 100, 200, 300, 400].forEach(t => setTimeout(shoot, t));
   };
 
+  const downloadPDF = () => {
+    // This is a placeholder for the actual PDF download functionality
+    // In a real implementation, you would generate a PDF and trigger the download
+    alert('PDF download functionality would be implemented here');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
       <style jsx global>{styles}</style>
@@ -227,6 +233,15 @@ export default function OfferDisplay({
           {companyLogo && (
             <Image src={companyLogo} alt="Company Logo" width={160} height={40} className="object-contain" />
           )}
+          <button
+            onClick={downloadPDF}
+            className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Download PDF
+          </button>
         </div>
       </header>
 
@@ -239,7 +254,7 @@ export default function OfferDisplay({
           </div>
 
           {/* Custom Message */}
-          <div className="animate-fade-in-up delay-2">
+          <div className="animate-fade-in-up delay-2 text-center">
             <p className="text-lg text-gray-600 mb-8">{customMessage}</p>
           </div>
 
@@ -267,10 +282,10 @@ export default function OfferDisplay({
             </div>
           </div>
 
-          {/* Start Date - Now with gradient background */}
+          {/* Proposed Start Date - Updated label */}
           <div className="animate-fade-in-up delay-5 mb-12">
             <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-8 shadow-md">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Start Date 📅</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Proposed Start Date 📅</h3>
               <p className="text-lg text-gray-700">{formatDate(startDate)}</p>
             </div>
           </div>
