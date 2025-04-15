@@ -232,10 +232,10 @@ export default function OfferDisplay({
 
       <main className="max-w-5xl mx-auto px-6 py-12">
         <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
-          {/* Welcome Message */}
-          <div className="animate-fade-in-up delay-1">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome aboard, {candidateName}! 🚀</h1>
-            <h2 className="text-2xl text-gray-700 mb-8">Your offer for {roleTitle} 💼</h2>
+          {/* Welcome Message - Updated to be more appropriate for an offer letter */}
+          <div className="animate-fade-in-up delay-1 text-center">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Congratulations, {candidateName}! 🎉</h1>
+            <h2 className="text-2xl text-gray-700 mb-8">Your offer for <span className="font-bold">{roleTitle}</span> 💼</h2>
           </div>
 
           {/* Custom Message */}
