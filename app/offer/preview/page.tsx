@@ -8,6 +8,7 @@ type Props = {
 
 export default async function Page({ searchParams }: Props) {
   const resolvedParams = await searchParams;
+  
   const offerData = {
     candidateName: resolvedParams.candidateName?.toString() || '',
     roleTitle: resolvedParams.roleTitle?.toString() || '',

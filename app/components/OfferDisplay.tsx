@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 
-// Add animation keyframes to the top of the file
+// Animation keyframes
 const styles = `
 @keyframes fadeInUp {
   from {
@@ -84,7 +84,7 @@ function TeamMessagesSection({ teamMessagesJson }: { teamMessagesJson: string })
       <h3 className="text-xl font-semibold text-gray-900 mb-6">Messages from the Team</h3>
       <div className="space-y-6">
         {messages.map((message, index) => (
-          <div key={index} className="bg-gray-50 rounded-xl p-6">
+          <div key={index} className="bg-gray-50 rounded-xl p-6 shadow-sm">
             <p className="text-gray-600 italic mb-4">"{message.message}"</p>
             <div className="flex items-center">
               <div>
@@ -92,6 +92,69 @@ function TeamMessagesSection({ teamMessagesJson }: { teamMessagesJson: string })
                 <p className="text-gray-600">{message.title}</p>
               </div>
             </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TimelineSection() {
+  const weeks = [
+    { week: 1, title: "Onboarding & Setup", description: "Complete paperwork, set up your workspace, and meet the team" },
+    { week: 2, title: "Training & Orientation", description: "Learn company processes and tools" },
+    { week: 3, title: "First Project Kickoff", description: "Begin working on your first project with the team" },
+    { week: 4, title: "First Month Review", description: "30-day check-in with your manager" }
+  ];
+
+  return (
+    <div className="animate-fade-in-up delay-5">
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">Your First 30 Days</h3>
+      <div className="space-y-4">
+        {weeks.map((item) => (
+          <div key={item.week} className="flex items-start">
+            <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold">
+              {item.week}
+            </div>
+            <div className="ml-4 bg-white rounded-xl p-4 shadow-sm flex-grow">
+              <h4 className="font-semibold text-gray-900">{item.title}</h4>
+              <p className="text-gray-600">{item.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FAQSection() {
+  const faqs = [
+    {
+      question: "When will I receive my first paycheck?",
+      answer: "Your first paycheck will be issued on the 15th of the month following your start date."
+    },
+    {
+      question: "What benefits are included?",
+      answer: "We offer comprehensive health insurance, 401(k) matching, paid time off, and professional development opportunities."
+    },
+    {
+      question: "Is remote work an option?",
+      answer: "Yes, we offer flexible work arrangements including remote, hybrid, and office-based options."
+    },
+    {
+      question: "How do I accept this offer?",
+      answer: "Click the 'Accept Offer' button below to confirm your acceptance. You'll receive a confirmation email shortly after."
+    }
+  ];
+
+  return (
+    <div className="animate-fade-in-up delay-6">
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">Frequently Asked Questions</h3>
+      <div className="space-y-4">
+        {faqs.map((faq, index) => (
+          <div key={index} className="bg-white rounded-xl p-6 shadow-sm">
+            <h4 className="font-semibold text-gray-900 mb-2">{faq.question}</h4>
+            <p className="text-gray-600">{faq.answer}</p>
           </div>
         ))}
       </div>
@@ -112,6 +175,7 @@ export default function OfferDisplay({
 }: OfferDisplayProps) {
   const [isAccepted, setIsAccepted] = useState(false);
 
+  // Initial confetti animation
   useEffect(() => {
     const end = Date.now() + 2000;
     const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'];
@@ -168,44 +232,61 @@ export default function OfferDisplay({
 
       <main className="max-w-5xl mx-auto px-6 py-12">
         <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+          {/* Welcome Message */}
           <div className="animate-fade-in-up delay-1">
             <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome aboard, {candidateName}!</h1>
             <h2 className="text-2xl text-gray-700 mb-8">Your offer for {roleTitle}</h2>
           </div>
 
+          {/* Custom Message */}
           <div className="animate-fade-in-up delay-2">
             <p className="text-lg text-gray-600 mb-8">{customMessage}</p>
           </div>
 
+          {/* Compensation Breakdown */}
           <div className="grid md:grid-cols-3 gap-6 mb-12 animate-fade-in-up delay-3">
-            <div className="bg-blue-50 rounded-xl p-6">
+            <div className="bg-blue-50 rounded-xl p-6 shadow-sm">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Base Salary</h3>
               <p className="text-2xl font-bold text-blue-600">{formatCurrency(Number(baseSalary))}</p>
             </div>
-            <div className="bg-purple-50 rounded-xl p-6">
+            <div className="bg-purple-50 rounded-xl p-6 shadow-sm">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Equity</h3>
               <p className="text-2xl font-bold text-purple-600">{formatCurrency(Number(equityValue))}</p>
             </div>
-            <div className="bg-green-50 rounded-xl p-6">
+            <div className="bg-green-50 rounded-xl p-6 shadow-sm">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Benefits</h3>
               <p className="text-2xl font-bold text-green-600">{formatCurrency(Number(benefitsValue))}</p>
             </div>
           </div>
 
+          {/* Total Compensation */}
           <div className="animate-fade-in-up delay-4">
-            <div className="bg-gray-50 rounded-xl p-6 mb-8">
+            <div className="bg-gray-50 rounded-xl p-6 mb-8 shadow-sm">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Total Compensation</h3>
               <p className="text-3xl font-bold text-gray-900">{formatCurrency(totalCompensation)}</p>
             </div>
           </div>
 
+          {/* Start Date */}
           <div className="animate-fade-in-up delay-5">
             <h3 className="text-xl font-semibold text-gray-900 mb-4">Start Date</h3>
             <p className="text-lg text-gray-700 mb-8">{formatDate(startDate)}</p>
           </div>
 
+          {/* Team Messages */}
           <TeamMessagesSection teamMessagesJson={teamMessages} />
 
+          {/* Timeline Section */}
+          <div className="my-12">
+            <TimelineSection />
+          </div>
+
+          {/* FAQ Section */}
+          <div className="my-12">
+            <FAQSection />
+          </div>
+
+          {/* Accept Offer Button */}
           {!isAccepted && (
             <div className="mt-12 text-center animate-fade-in-up delay-6">
               <button
@@ -220,6 +301,7 @@ export default function OfferDisplay({
             </div>
           )}
 
+          {/* Acceptance Confirmation */}
           {isAccepted && (
             <div className="mt-12 text-center animate-scale-in">
               <div className="inline-block bg-green-100 text-green-800 px-6 py-3 rounded-lg">
