@@ -144,7 +144,84 @@ export default function OfferDisplay({
       </header>
 
       <main className="max-w-5xl mx-auto px-6 py-12">
-        {/* ...component content remains unchanged... */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+          <div className="animate-fade-in-up delay-1">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome aboard, {candidateName}!</h1>
+            <h2 className="text-2xl text-gray-700 mb-8">Your offer for {roleTitle}</h2>
+          </div>
+
+          <div className="animate-fade-in-up delay-2">
+            <p className="text-lg text-gray-600 mb-8">{customMessage}</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-12 animate-fade-in-up delay-3">
+            <div className="bg-blue-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Base Salary</h3>
+              <p className="text-2xl font-bold text-blue-600">{formatCurrency(Number(baseSalary))}</p>
+            </div>
+            <div className="bg-purple-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Equity</h3>
+              <p className="text-2xl font-bold text-purple-600">{formatCurrency(Number(equityValue))}</p>
+            </div>
+            <div className="bg-green-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Benefits</h3>
+              <p className="text-2xl font-bold text-green-600">{formatCurrency(Number(benefitsValue))}</p>
+            </div>
+          </div>
+
+          <div className="animate-fade-in-up delay-4">
+            <div className="bg-gray-50 rounded-xl p-6 mb-8">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Total Compensation</h3>
+              <p className="text-3xl font-bold text-gray-900">{formatCurrency(totalCompensation)}</p>
+            </div>
+          </div>
+
+          <div className="animate-fade-in-up delay-5">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">Start Date</h3>
+            <p className="text-lg text-gray-700 mb-8">{formatDate(startDate)}</p>
+          </div>
+
+          {resolvedTeamMessages.length > 0 && (
+            <div className="animate-fade-in-up delay-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">Messages from the Team</h3>
+              <div className="space-y-6">
+                {resolvedTeamMessages.map((message, index) => (
+                  <div key={index} className="bg-gray-50 rounded-xl p-6">
+                    <p className="text-gray-600 italic mb-4">"{message.message}"</p>
+                    <div className="flex items-center">
+                      <div>
+                        <p className="font-semibold text-gray-900">{message.name}</p>
+                        <p className="text-gray-600">{message.title}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {!isAccepted && (
+            <div className="mt-12 text-center animate-fade-in-up delay-6">
+              <button
+                onClick={() => {
+                  setIsAccepted(true);
+                  celebrateAcceptance();
+                }}
+                className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200 transition-all transform hover:scale-105"
+              >
+                Accept Offer
+              </button>
+            </div>
+          )}
+
+          {isAccepted && (
+            <div className="mt-12 text-center animate-scale-in">
+              <div className="inline-block bg-green-100 text-green-800 px-6 py-3 rounded-lg">
+                🎉 Congratulations! You've accepted the offer!
+              </div>
+            </div>
+          )}
+        </div>
       </main>
 
       <footer className="bg-white border-t border-gray-200 mt-12">
