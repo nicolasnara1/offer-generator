@@ -16,6 +16,7 @@ export default function OfferPreview() {
     startDate: searchParams.get('startDate') || '',
     customMessage: searchParams.get('customMessage') || '',
     companyLogo: searchParams.get('companyLogo') || '',
+    teamMessages: searchParams.get('teamMessages') || '[]',
   };
 
   return (
