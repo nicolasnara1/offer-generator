@@ -243,8 +243,16 @@ export default function OfferDisplay({
             <p className="text-lg text-gray-600 mb-8">{customMessage}</p>
           </div>
 
+          {/* Total Compensation - Moved above the breakdown */}
+          <div className="animate-fade-in-up delay-3 mb-12">
+            <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-8 shadow-lg">
+              <h3 className="text-xl font-semibold text-white mb-2">Total Compensation</h3>
+              <p className="text-4xl font-bold text-white">{formatCurrency(totalCompensation)}</p>
+            </div>
+          </div>
+
           {/* Compensation Breakdown */}
-          <div className="grid md:grid-cols-3 gap-6 mb-12 animate-fade-in-up delay-3">
+          <div className="grid md:grid-cols-3 gap-6 mb-12 animate-fade-in-up delay-4">
             <div className="bg-blue-50 rounded-xl p-6 shadow-sm">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Base Salary</h3>
               <p className="text-2xl font-bold text-blue-600">{formatCurrency(Number(baseSalary))}</p>
@@ -259,14 +267,6 @@ export default function OfferDisplay({
             </div>
           </div>
 
-          {/* Total Compensation */}
-          <div className="animate-fade-in-up delay-4">
-            <div className="bg-gray-50 rounded-xl p-6 mb-8 shadow-sm">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Total Compensation</h3>
-              <p className="text-3xl font-bold text-gray-900">{formatCurrency(totalCompensation)}</p>
-            </div>
-          </div>
-
           {/* Start Date */}
           <div className="animate-fade-in-up delay-5">
             <h3 className="text-xl font-semibold text-gray-900 mb-4">Start Date</h3>
@@ -276,13 +276,13 @@ export default function OfferDisplay({
           {/* Team Messages */}
           <TeamMessagesSection teamMessagesJson={teamMessages} />
 
-          {/* Timeline Section */}
-          <div className="my-12">
+          {/* Timeline Section - Now with gradient background */}
+          <div className="my-12 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-md">
             <TimelineSection />
           </div>
 
-          {/* FAQ Section */}
-          <div className="my-12">
+          {/* FAQ Section - Now with gradient background */}
+          <div className="my-12 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-8 shadow-md">
             <FAQSection />
           </div>
 
