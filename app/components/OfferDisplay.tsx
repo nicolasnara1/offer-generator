@@ -81,7 +81,7 @@ function TeamMessagesSection({ teamMessagesJson }: { teamMessagesJson: string })
 
   return (
     <div className="animate-fade-in-up delay-6">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6">Messages from the Team</h3>
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">Messages from the Team 💬</h3>
       <div className="space-y-6">
         {messages.map((message, index) => (
           <div key={index} className="bg-gray-50 rounded-xl p-6 shadow-sm">
@@ -109,7 +109,7 @@ function TimelineSection() {
 
   return (
     <div className="animate-fade-in-up delay-5">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6">Your First 30 Days</h3>
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">Your First 30 Days 📅</h3>
       <div className="space-y-4">
         {weeks.map((item) => (
           <div key={item.week} className="flex items-start">
@@ -149,7 +149,7 @@ function FAQSection() {
 
   return (
     <div className="animate-fade-in-up delay-6">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6">Frequently Asked Questions</h3>
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">Frequently Asked Questions ❓</h3>
       <div className="space-y-4">
         {faqs.map((faq, index) => (
           <div key={index} className="bg-white rounded-xl p-6 shadow-sm">
@@ -234,8 +234,8 @@ export default function OfferDisplay({
         <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
           {/* Welcome Message */}
           <div className="animate-fade-in-up delay-1">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome aboard, {candidateName}!</h1>
-            <h2 className="text-2xl text-gray-700 mb-8">Your offer for {roleTitle}</h2>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome aboard, {candidateName}! 🚀</h1>
+            <h2 className="text-2xl text-gray-700 mb-8">Your offer for {roleTitle} 💼</h2>
           </div>
 
           {/* Custom Message */}
@@ -246,7 +246,7 @@ export default function OfferDisplay({
           {/* Total Compensation - Moved above the breakdown */}
           <div className="animate-fade-in-up delay-3 mb-12">
             <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-8 shadow-lg">
-              <h3 className="text-xl font-semibold text-white mb-2">Total Compensation</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">Total Compensation 💰</h3>
               <p className="text-4xl font-bold text-white">{formatCurrency(totalCompensation)}</p>
             </div>
           </div>
@@ -254,27 +254,31 @@ export default function OfferDisplay({
           {/* Compensation Breakdown */}
           <div className="grid md:grid-cols-3 gap-6 mb-12 animate-fade-in-up delay-4">
             <div className="bg-blue-50 rounded-xl p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Base Salary</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Base Salary 💵</h3>
               <p className="text-2xl font-bold text-blue-600">{formatCurrency(Number(baseSalary))}</p>
             </div>
             <div className="bg-purple-50 rounded-xl p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Equity</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Equity 📈</h3>
               <p className="text-2xl font-bold text-purple-600">{formatCurrency(Number(equityValue))}</p>
             </div>
             <div className="bg-green-50 rounded-xl p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Benefits</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Benefits 🏥</h3>
               <p className="text-2xl font-bold text-green-600">{formatCurrency(Number(benefitsValue))}</p>
             </div>
           </div>
 
-          {/* Start Date */}
-          <div className="animate-fade-in-up delay-5">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Start Date</h3>
-            <p className="text-lg text-gray-700 mb-8">{formatDate(startDate)}</p>
+          {/* Start Date - Now with gradient background */}
+          <div className="animate-fade-in-up delay-5 mb-12">
+            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-8 shadow-md">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Start Date 📅</h3>
+              <p className="text-lg text-gray-700">{formatDate(startDate)}</p>
+            </div>
           </div>
 
-          {/* Team Messages */}
-          <TeamMessagesSection teamMessagesJson={teamMessages} />
+          {/* Team Messages - Now with gradient background */}
+          <div className="my-12 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-2xl p-8 shadow-md">
+            <TeamMessagesSection teamMessagesJson={teamMessages} />
+          </div>
 
           {/* Timeline Section - Now with gradient background */}
           <div className="my-12 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-md">
@@ -296,7 +300,7 @@ export default function OfferDisplay({
                 }}
                 className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200 transition-all transform hover:scale-105"
               >
-                Accept Offer
+                Accept Offer ✨
               </button>
             </div>
           )}
@@ -305,7 +309,7 @@ export default function OfferDisplay({
           {isAccepted && (
             <div className="mt-12 text-center animate-scale-in">
               <div className="inline-block bg-green-100 text-green-800 px-6 py-3 rounded-lg">
-                🎉 Congratulations! You've accepted the offer!
+                🎉 Congratulations! You've accepted the offer! 🎊
               </div>
             </div>
           )}
