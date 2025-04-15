@@ -1,22 +1,21 @@
 import { Suspense } from 'react';
 import OfferDisplay from '@/app/components/OfferDisplay';
 
-interface PageProps {
-  params: { id: string };
-  searchParams: { [key: string]: string | undefined };
-}
-
-export default function Page({ searchParams }: PageProps) {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const offerData = {
-    candidateName: searchParams.candidateName || '',
-    roleTitle: searchParams.roleTitle || '',
-    baseSalary: searchParams.baseSalary || '',
-    equityValue: searchParams.equityValue || '',
-    benefitsValue: searchParams.benefitsValue || '',
-    startDate: searchParams.startDate || '',
-    customMessage: searchParams.customMessage || '',
-    companyLogo: searchParams.companyLogo || '',
-    teamMessages: searchParams.teamMessages || '[]',
+    candidateName: searchParams.candidateName?.toString() || '',
+    roleTitle: searchParams.roleTitle?.toString() || '',
+    baseSalary: searchParams.baseSalary?.toString() || '',
+    equityValue: searchParams.equityValue?.toString() || '',
+    benefitsValue: searchParams.benefitsValue?.toString() || '',
+    startDate: searchParams.startDate?.toString() || '',
+    customMessage: searchParams.customMessage?.toString() || '',
+    companyLogo: searchParams.companyLogo?.toString() || '',
+    teamMessages: searchParams.teamMessages?.toString() || '[]',
   };
 
   return (
