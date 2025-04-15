@@ -1,8 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 
 // Add animation keyframes to the top of the file
@@ -62,32 +61,29 @@ type OfferDisplayProps = {
   startDate: string;
   customMessage: string;
   companyLogo?: string;
+  teamMessages: string;
 };
 
-function TeamMessages() {
-  const searchParams = useSearchParams();
-  const [resolvedTeamMessages, setResolvedTeamMessages] = useState<TeamMessage[]>([]);
+function TeamMessagesSection({ teamMessagesJson }: { teamMessagesJson: string }) {
+  const [messages, setMessages] = useState<TeamMessage[]>([]);
 
   useEffect(() => {
-    const teamMessagesParam = searchParams.get('teamMessages');
-    if (teamMessagesParam) {
-      try {
-        const parsedMessages = JSON.parse(teamMessagesParam);
-        setResolvedTeamMessages(parsedMessages);
-      } catch (error) {
-        console.error('Failed to parse team messages', error);
-        setResolvedTeamMessages([]);
-      }
+    try {
+      const parsedMessages = JSON.parse(teamMessagesJson);
+      setMessages(parsedMessages);
+    } catch (error) {
+      console.error('Failed to parse team messages', error);
+      setMessages([]);
     }
-  }, [searchParams]);
+  }, [teamMessagesJson]);
 
-  if (resolvedTeamMessages.length === 0) return null;
+  if (messages.length === 0) return null;
 
   return (
     <div className="animate-fade-in-up delay-6">
       <h3 className="text-xl font-semibold text-gray-900 mb-6">Messages from the Team</h3>
       <div className="space-y-6">
-        {resolvedTeamMessages.map((message, index) => (
+        {messages.map((message, index) => (
           <div key={index} className="bg-gray-50 rounded-xl p-6">
             <p className="text-gray-600 italic mb-4">"{message.message}"</p>
             <div className="flex items-center">
@@ -112,6 +108,7 @@ export default function OfferDisplay({
   startDate,
   customMessage,
   companyLogo,
+  teamMessages,
 }: OfferDisplayProps) {
   const [isAccepted, setIsAccepted] = useState(false);
 
@@ -207,9 +204,7 @@ export default function OfferDisplay({
             <p className="text-lg text-gray-700 mb-8">{formatDate(startDate)}</p>
           </div>
 
-          <Suspense fallback={<div>Loading team messages...</div>}>
-            <TeamMessages />
-          </Suspense>
+          <TeamMessagesSection teamMessagesJson={teamMessages} />
 
           {!isAccepted && (
             <div className="mt-12 text-center animate-fade-in-up delay-6">
