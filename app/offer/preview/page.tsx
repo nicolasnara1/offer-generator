@@ -1,21 +1,22 @@
 import { Suspense } from 'react';
 import OfferDisplay from '@/app/components/OfferDisplay';
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined }
-}) {
+interface PageProps {
+  params: { id: string };
+  searchParams: { [key: string]: string | undefined };
+}
+
+export default function Page({ searchParams }: PageProps) {
   const offerData = {
-    candidateName: searchParams.candidateName as string || '',
-    roleTitle: searchParams.roleTitle as string || '',
-    baseSalary: searchParams.baseSalary as string || '',
-    equityValue: searchParams.equityValue as string || '',
-    benefitsValue: searchParams.benefitsValue as string || '',
-    startDate: searchParams.startDate as string || '',
-    customMessage: searchParams.customMessage as string || '',
-    companyLogo: searchParams.companyLogo as string || '',
-    teamMessages: searchParams.teamMessages as string || '[]',
+    candidateName: searchParams.candidateName || '',
+    roleTitle: searchParams.roleTitle || '',
+    baseSalary: searchParams.baseSalary || '',
+    equityValue: searchParams.equityValue || '',
+    benefitsValue: searchParams.benefitsValue || '',
+    startDate: searchParams.startDate || '',
+    customMessage: searchParams.customMessage || '',
+    companyLogo: searchParams.companyLogo || '',
+    teamMessages: searchParams.teamMessages || '[]',
   };
 
   return (
